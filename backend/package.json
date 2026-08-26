@@ -10,10 +10,16 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
+ "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@huggingface/transformers": "^4.2.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1"
+},
+  "allowScripts": {
+    "onnxruntime-node@1.24.3": true,
+    "sharp@0.34.5": true,
+    "protobufjs@7.6.5": true
   }
 }
