@@ -126,10 +126,7 @@ if (submitted) {
           </div>
         )}
 
-        <a
-          href="/"
-          className="primary-button"
-        >
+        <a href="/" className="primary-button">
           {t.returnHome}
         </a>
 

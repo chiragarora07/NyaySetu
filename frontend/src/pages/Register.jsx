@@ -63,43 +63,76 @@ function Register() {
   };
 
   if (submitted) {
-    return (
-      <section className="success-page">
-        <div className="success-card">
+  return (
+    <section className="success-page">
+      <div className="success-card">
 
-          <div className="success-icon">
-            <CheckCircle2 size={40} />
-          </div>
-
-          <span className="section-eyebrow">
-            {t.grievanceReceived}
-          </span>
-
-          <h1>
-            {t.grievanceOnItsWay}
-          </h1>
-
-          <p>
-            {t.grievanceReceivedDescription}
-          </p>
-
-          <div className="grievance-id">
-            <span>{t.grievanceId}</span>
-            <strong>{grievanceId}</strong>
-          </div>
-
-          <a
-            href="/"
-            className="primary-button"
-          >
-            {t.returnHome}
-          </a>
-
+        <div className="success-icon">
+          <CheckCircle2 size={40} />
         </div>
-      </section>
-    );
-  }
 
+        <span className="section-eyebrow">
+          GRIEVANCE ANALYZED
+        </span>
+
+        <h1>Your grievance has been analyzed.</h1>
+
+        <p>
+          NyaySetu has analyzed your complaint and identified
+          the appropriate department and priority.
+        </p>
+
+        <div className="grievance-id">
+          <span>GRIEVANCE ID</span>
+          <strong>{grievanceId}</strong>
+        </div>
+
+        {analysis && (
+          <div className="analysis-result">
+
+            <div>
+              <span>Category</span>
+              <strong>{analysis.category}</strong>
+            </div>
+
+            <div>
+              <span>Department</span>
+              <strong>{analysis.department}</strong>
+            </div>
+
+            <div>
+              <span>Priority</span>
+              <strong>{analysis.priority}</strong>
+            </div>
+
+            <div>
+              <span>Summary</span>
+              <strong>{analysis.summary}</strong>
+            </div>
+
+            <div>
+              <span>Reason</span>
+              <strong>
+                {analysis.priorityReason || analysis.reason}
+              </strong>
+            </div>
+
+            <div>
+              <span>Analysis Status</span>
+              <strong>Analyzed Successfully</strong>
+            </div>
+
+          </div>
+        )}
+
+        <a href="/" className="primary-button">
+          {t.returnHome}
+        </a>
+
+      </div>
+    </section>
+  );
+}
   return (
     <section className="register-page">
       <div className="register-container">
