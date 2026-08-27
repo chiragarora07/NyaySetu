@@ -3,7 +3,7 @@ const cors = require("cors");
 const { analyzeWithAI } = require("./ai/coordinator");
 
 const app = express();
-const FASTAPI_BASE_URL = "http://127.0.0.1:8000";
+const FASTAPI_BASE_URL = "http://127.0.0.1:8004";
 
 app.use(cors());
 app.use(express.json());
