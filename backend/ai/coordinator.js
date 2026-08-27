@@ -30,7 +30,24 @@ function extractJson(responseText) {
     return JSON.parse(jsonMatch[0]);
   }
 }
+function createFallbackAnalysis(complaint, knowledge) {
+  const priorityResult = calculatePriority(complaint, 0, "");
 
+  const firstKnowledge = knowledge[0];
+
+  return {
+    category: "General Civic Issue",
+    department: firstKnowledge?.department || "General Administration",
+    priority: priorityResult.priority,
+    priorityScore: priorityResult.score,
+    priorityReason: priorityResult.reason,
+    summary: complaint.slice(0, 200),
+    reason: "AI service unavailable. Priority determined using NyaySetu rule-based analysis.",
+    status: "Pending",
+    ragUsed: knowledge.length > 0,
+    retrievedSources: knowledge.map((item) => item.department)
+  };
+}
 async function analyzeWithAI(complaint) {
   const knowledge = retrieveRelevantKnowledge(complaint);
   const hasRelevantKnowledge = knowledge.length > 0;
@@ -121,7 +138,9 @@ Return ONLY valid JSON:
     };
   } catch (error) {
     console.error("Gemini analysis error:", error);
-    throw new Error("AI analysis failed");
+    console.log("Using rule-based fallback analysis.");
+
+    return createFallbackAnalysis(complaint, knowledge);
   }
 }
 
