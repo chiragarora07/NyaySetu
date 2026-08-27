@@ -59,11 +59,11 @@ const handleSubmit = async (e) => {
     setLoading(false);
   }
 };
-
 if (submitted) {
   return (
     <section className="success-page">
       <div className="success-card">
+
         <div className="success-icon">
           <CheckCircle2 size={40} />
         </div>
@@ -72,7 +72,9 @@ if (submitted) {
           GRIEVANCE ANALYZED
         </span>
 
-        <h1>Your grievance has been analyzed.</h1>
+        <h1>
+          Your grievance has been analyzed.
+        </h1>
 
         <p>
           NyaySetu has analyzed your complaint and identified
@@ -88,6 +90,7 @@ if (submitted) {
 
         {analysis && (
           <div className="analysis-result">
+
             <div>
               <span>Category</span>
               <strong>{analysis.category}</strong>
@@ -119,17 +122,21 @@ if (submitted) {
               <span>Analysis Status</span>
               <strong>Analyzed Successfully</strong>
             </div>
+
           </div>
         )}
 
-        <a href="/" className="primary-button">
-          Return to Home
+        <a
+          href="/"
+          className="primary-button"
+        >
+          {t.returnHome}
         </a>
+
       </div>
     </section>
   );
 }
-
   return (
     <section className="register-page">
       <div className="register-container">
