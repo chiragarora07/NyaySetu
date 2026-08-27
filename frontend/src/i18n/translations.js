@@ -275,6 +275,32 @@ const translations = {
         returnHome: "Return to Home",
 
         // =========================
+        // ANALYSIS RESULT
+        // =========================
+
+        grievanceAnalyzed: "GRIEVANCE ANALYZED",
+
+        grievanceAnalyzedTitle:
+            "Your grievance has been analyzed.",
+
+        grievanceAnalyzedDescription:
+            "NyaySetu has analyzed your complaint and identified the appropriate department and priority.",
+
+        category: "Category",
+
+        department: "Department",
+
+        priority: "Priority",
+
+        summary: "Summary",
+
+        reason: "Reason",
+
+        analysisStatus: "Analysis Status",
+
+        analyzedSuccessfully: "Analyzed Successfully",
+
+        // =========================
         // TRACK PAGE
         // =========================
 
@@ -290,8 +316,6 @@ const translations = {
 
         inProgress: "IN PROGRESS",
 
-        category: "Category",
-
         infrastructure: "Infrastructure",
 
         issue: "Issue",
@@ -299,8 +323,6 @@ const translations = {
         streetLighting: "Street Lighting",
 
         sector4: "Sector 4",
-
-        priority: "Priority",
 
         high: "HIGH",
 
@@ -337,10 +359,6 @@ const translations = {
         recentGrievances: "Recent Grievances",
 
         allGrievances: "All Grievances",
-
-        priority: "Priority",
-
-        department: "Department",
 
         resolved: "Resolved",
 
@@ -650,6 +668,32 @@ const translations = {
         returnHome: "होम पर वापस जाएँ",
 
         // =========================
+        // ANALYSIS RESULT
+        // =========================
+
+        grievanceAnalyzed: "शिकायत का विश्लेषण पूरा हुआ",
+
+        grievanceAnalyzedTitle:
+            "आपकी शिकायत का विश्लेषण पूरा हो गया है।",
+
+        grievanceAnalyzedDescription:
+            "न्यायसेतु ने आपकी शिकायत का विश्लेषण करके उपयुक्त विभाग और प्राथमिकता की पहचान की है।",
+
+        category: "श्रेणी",
+
+        department: "विभाग",
+
+        priority: "प्राथमिकता",
+
+        summary: "सारांश",
+
+        reason: "कारण",
+
+        analysisStatus: "विश्लेषण स्थिति",
+
+        analyzedSuccessfully: "सफलतापूर्वक विश्लेषण किया गया",
+
+        // =========================
         // TRACK PAGE
         // =========================
 
@@ -665,8 +709,6 @@ const translations = {
 
         inProgress: "प्रगति में",
 
-        category: "श्रेणी",
-
         infrastructure: "बुनियादी ढाँचा",
 
         issue: "समस्या",
@@ -674,8 +716,6 @@ const translations = {
         streetLighting: "स्ट्रीट लाइट",
 
         sector4: "सेक्टर 4",
-
-        priority: "प्राथमिकता",
 
         high: "उच्च",
 
@@ -712,10 +752,6 @@ const translations = {
         recentGrievances: "हाल की शिकायतें",
 
         allGrievances: "सभी शिकायतें",
-
-        priority: "प्राथमिकता",
-
-        department: "विभाग",
 
         resolved: "समाधान हो गया",
 

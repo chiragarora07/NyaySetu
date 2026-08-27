@@ -10,7 +10,7 @@ import {
 import { useSite } from "../context/SiteContext";
 
 function Register() {
-  const { t } = useSite();
+  const { t, language } = useSite();
 
   const [submitted, setSubmitted] = useState(false);
   const [citizenName, setCitizenName] = useState("");
@@ -21,6 +21,62 @@ function Register() {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Translate only fixed AI values.
+  // AI-generated text such as summary/reason/category/department
+  // is already returned in the user's language by the backend.
+  const getPriorityText = (priority) => {
+    if (language !== "hi") {
+      return priority;
+    }
+
+    const priorityMap = {
+      Critical: "अत्यंत गंभीर",
+      High: "उच्च",
+      Medium: "मध्यम",
+      Low: "कम",
+      critical: "अत्यंत गंभीर",
+      high: "उच्च",
+      medium: "मध्यम",
+      low: "कम",
+      "अत्यंत गंभीर": "अत्यंत गंभीर",
+      "उच्च": "उच्च",
+      "मध्यम": "मध्यम",
+      "कम": "कम",
+    };
+
+    return priorityMap[priority] || priority;
+  };
+
+  const getStatusText = (status) => {
+    if (!status) {
+      return language === "hi" ? "लंबित" : "Pending";
+    }
+
+    if (language !== "hi") {
+      return status;
+    }
+
+    const statusMap = {
+      Pending: "लंबित",
+      pending: "लंबित",
+      Analyzed: "विश्लेषित",
+      analyzed: "विश्लेषित",
+      "In Progress": "प्रगति में",
+      "in progress": "प्रगति में",
+      Resolved: "समाधान हो गया",
+      resolved: "समाधान हो गया",
+      Assigned: "सौंपा गया",
+      assigned: "सौंपा गया",
+      "लंबित": "लंबित",
+      "विश्लेषित": "विश्लेषित",
+      "प्रगति में": "प्रगति में",
+      "समाधान हो गया": "समाधान हो गया",
+      "सौंपा गया": "सौंपा गया",
+    };
+
+    return statusMap[status] || status;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,14 +90,15 @@ function Register() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             citizen_name: citizenName,
             citizen_mobile: citizenMobile,
             description: complaintText,
-            location: location
-          })
+            location: location,
+            language: language,
+          }),
         }
       );
 
@@ -62,81 +119,137 @@ function Register() {
     }
   };
 
+  // =========================
+  // SUCCESS SCREEN
+  // =========================
+
   if (submitted) {
-  return (
-    <section className="success-page">
-      <div className="success-card">
+    return (
+      <section className="success-page">
+        <div className="success-card">
 
-        <div className="success-icon">
-          <CheckCircle2 size={40} />
-        </div>
-
-        <span className="section-eyebrow">
-          GRIEVANCE ANALYZED
-        </span>
-
-        <h1>Your grievance has been analyzed.</h1>
-
-        <p>
-          NyaySetu has analyzed your complaint and identified
-          the appropriate department and priority.
-        </p>
-
-        <div className="grievance-id">
-          <span>GRIEVANCE ID</span>
-          <strong>{grievanceId}</strong>
-        </div>
-
-        {analysis && (
-          <div className="analysis-result">
-
-            <div>
-              <span>Category</span>
-              <strong>{analysis.category}</strong>
-            </div>
-
-            <div>
-              <span>Department</span>
-              <strong>{analysis.department}</strong>
-            </div>
-
-            <div>
-              <span>Priority</span>
-              <strong>{analysis.priority}</strong>
-            </div>
-
-            <div>
-              <span>Summary</span>
-              <strong>{analysis.summary}</strong>
-            </div>
-
-            <div>
-              <span>Reason</span>
-              <strong>
-                {analysis.priorityReason || analysis.reason}
-              </strong>
-            </div>
-
-            <div>
-              <span>Analysis Status</span>
-              <strong>Analyzed Successfully</strong>
-            </div>
-
+          <div className="success-icon">
+            <CheckCircle2 size={40} />
           </div>
-        )}
 
-        <a href="/" className="primary-button">
-          {t.returnHome}
-        </a>
+          <span className="section-eyebrow">
+            {language === "hi"
+              ? "शिकायत का विश्लेषण पूरा हुआ"
+              : "GRIEVANCE ANALYZED"}
+          </span>
 
-      </div>
-    </section>
-  );
-}
+          <h1>
+            {language === "hi"
+              ? "आपकी शिकायत का विश्लेषण पूरा हो गया है।"
+              : "Your grievance has been analyzed."}
+          </h1>
+
+          <p>
+            {language === "hi"
+              ? "न्यायसेतु ने आपकी शिकायत का विश्लेषण करके उपयुक्त विभाग और प्राथमिकता की पहचान की है।"
+              : "NyaySetu has analyzed your complaint and identified the appropriate department and priority."}
+          </p>
+
+          <div className="grievance-id">
+            <span>{t.grievanceId}</span>
+            <strong>{grievanceId}</strong>
+          </div>
+
+          {analysis && (
+            <div className="analysis-result">
+
+              {/* CATEGORY */}
+              <div>
+                <span>{t.category}</span>
+                <strong>{analysis.category}</strong>
+              </div>
+
+              {/* DEPARTMENT */}
+              <div>
+                <span>{t.department}</span>
+                <strong>{analysis.department}</strong>
+              </div>
+
+              {/* PRIORITY */}
+              <div>
+                <span>{t.priority}</span>
+                <strong>
+                  {getPriorityText(analysis.priority)}
+                </strong>
+              </div>
+
+              {/* SUMMARY */}
+              <div>
+                <span>
+                  {language === "hi" ? "सारांश" : "Summary"}
+                </span>
+                <strong>
+                  {analysis.summary}
+                </strong>
+              </div>
+
+              {/* REASON */}
+              <div>
+                <span>
+                  {language === "hi" ? "कारण" : "Reason"}
+                </span>
+                <strong>
+                  {analysis.priorityReason || analysis.reason}
+                </strong>
+              </div>
+
+              {/* STATUS */}
+              <div>
+                <span>
+                  {language === "hi"
+                    ? "विश्लेषण स्थिति"
+                    : "Analysis Status"}
+                </span>
+
+                <strong>
+                  {language === "hi"
+                    ? "सफलतापूर्वक विश्लेषण किया गया"
+                    : "Analyzed Successfully"}
+                </strong>
+              </div>
+
+              {/* CURRENT STATUS */}
+              {analysis.status && (
+                <div>
+                  <span>
+                    {language === "hi"
+                      ? "स्थिति"
+                      : "Status"}
+                  </span>
+
+                  <strong>
+                    {getStatusText(analysis.status)}
+                  </strong>
+                </div>
+              )}
+
+            </div>
+          )}
+
+          <a href="/" className="primary-button">
+            {t.returnHome}
+          </a>
+
+        </div>
+      </section>
+    );
+  }
+
+  // =========================
+  // REGISTER FORM
+  // =========================
+
   return (
     <section className="register-page">
+
       <div className="register-container">
 
+        {/* PAGE HEADER */}
         <div className="register-header">
 
           <span className="section-eyebrow">
@@ -153,6 +266,7 @@ function Register() {
 
         </div>
 
+        {/* ERROR */}
         {error && (
           <p className="form-error">
             {error}
@@ -164,7 +278,9 @@ function Register() {
           onSubmit={handleSubmit}
         >
 
-          {/* 01 - CITIZEN INFORMATION */}
+          {/* =========================
+              01 - CITIZEN INFORMATION
+          ========================= */}
 
           <div className="form-section">
 
@@ -175,6 +291,7 @@ function Register() {
 
             <div className="form-grid">
 
+              {/* NAME */}
               <div className="form-field">
 
                 <label>
@@ -186,11 +303,14 @@ function Register() {
                   placeholder={t.namePlaceholder}
                   required
                   value={citizenName}
-                  onChange={(e) => setCitizenName(e.target.value)}
+                  onChange={(e) =>
+                    setCitizenName(e.target.value)
+                  }
                 />
 
               </div>
 
+              {/* MOBILE */}
               <div className="form-field">
 
                 <label>
@@ -202,7 +322,9 @@ function Register() {
                   placeholder={t.phonePlaceholder}
                   required
                   value={citizenMobile}
-                  onChange={(e) => setCitizenMobile(e.target.value)}
+                  onChange={(e) =>
+                    setCitizenMobile(e.target.value)
+                  }
                 />
 
               </div>
@@ -210,7 +332,9 @@ function Register() {
             </div>
           </div>
 
-          {/* 02 - GRIEVANCE DETAILS */}
+          {/* =========================
+              02 - GRIEVANCE DETAILS
+          ========================= */}
 
           <div className="form-section">
 
@@ -219,6 +343,7 @@ function Register() {
               {t.grievanceDetails}
             </div>
 
+            {/* COMPLAINT */}
             <div className="form-field">
 
               <label>
@@ -230,10 +355,14 @@ function Register() {
                 placeholder={t.grievancePlaceholder}
                 required
                 value={complaintText}
-                onChange={(e) => setComplaintText(e.target.value)}
+                onChange={(e) =>
+                  setComplaintText(e.target.value)
+                }
               />
+
             </div>
 
+            {/* ISSUE TYPE */}
             <div className="form-field">
 
               <label>
@@ -286,7 +415,9 @@ function Register() {
 
           </div>
 
-          {/* 03 - LOCATION */}
+          {/* =========================
+              03 - LOCATION
+          ========================= */}
 
           <div className="form-section">
 
@@ -297,6 +428,7 @@ function Register() {
 
             <div className="form-grid">
 
+              {/* CITY */}
               <div className="form-field">
 
                 <label>
@@ -308,11 +440,14 @@ function Register() {
                   placeholder={t.cityDistrictPlaceholder}
                   required
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={(e) =>
+                    setLocation(e.target.value)
+                  }
                 />
 
               </div>
 
+              {/* LOCALITY */}
               <div className="form-field">
 
                 <label>
@@ -333,12 +468,15 @@ function Register() {
               className="location-button"
             >
               <MapPin size={17} />
+
               {t.useCurrentLocation}
             </button>
 
           </div>
 
-          {/* 04 - SUPPORTING EVIDENCE */}
+          {/* =========================
+              04 - SUPPORTING EVIDENCE
+          ========================= */}
 
           <div className="form-section">
 
@@ -369,7 +507,9 @@ function Register() {
 
           </div>
 
-          {/* SUBMIT */}
+          {/* =========================
+              SUBMIT
+          ========================= */}
 
           <div className="form-submit">
 
@@ -390,8 +530,15 @@ function Register() {
               className="primary-button"
               disabled={loading}
             >
-              {loading ? t.submitting : t.submit}
-              {!loading && <ArrowRight size={18} />}
+
+              {loading
+                ? t.submitting
+                : t.submit}
+
+              {!loading && (
+                <ArrowRight size={18} />
+              )}
+
             </button>
 
           </div>
@@ -399,6 +546,7 @@ function Register() {
         </form>
 
       </div>
+
     </section>
   );
 }
