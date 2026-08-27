@@ -3,20 +3,39 @@
   --navy-dark: #09182c;
   --ivory: #f7f5ef;
   --white: #ffffff;
-
   --saffron: #e28b32;
   --green: #2f8068;
-
   --text: #172033;
   --muted: #667085;
   --border: #dfe3e8;
 
+  /* Theme variables */
+  --background: #f7f5ef;
+  --surface: #ffffff;
+
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
-
   --shadow-sm: 0 2px 8px rgba(16, 35, 63, 0.06);
   --shadow-md: 0 8px 24px rgba(16, 35, 63, 0.08);
+}
+
+html[data-theme="dark"] {
+  --navy: #e7edf5;
+  --navy-dark: #f1f5f9;
+  --ivory: #0d1726;
+  --white: #152235;
+  --saffron: #f0a33a;
+  --green: #5bb89a;
+  --text: #e8edf4;
+  --muted: #9aa8ba;
+  --border: #2a394d;
+
+  --background: #0d1726;
+  --surface: #152235;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 * {
@@ -32,6 +51,8 @@ body {
   font-family: Inter, Arial, sans-serif;
   background: var(--ivory);
   color: var(--text);
+
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 a {
@@ -3033,3 +3054,1228 @@ button {
   }
 
 }
+.language-toggle,
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border);
+
+  background: var(--surface);
+
+  color: var(--navy);
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.language-toggle {
+  height: 34px;
+
+  padding: 0 10px;
+
+  border-radius: 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 5px;
+}
+
+.language-toggle:hover,
+.theme-toggle:hover {
+  background: var(--navy);
+  color: white;
+}
+
+@media (max-width: 850px) {
+
+  .language-toggle {
+    margin-left: auto;
+    margin-right: 8px;
+  }
+
+}
+
+/* =========================
+   NAVBAR ALIGNMENT FIX
+========================= */
+
+.site-navbar {
+  width: 100%;
+  position: relative;
+  z-index: 100;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+/* Logo */
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  flex-shrink: 0;
+
+  text-decoration: none;
+}
+
+.navbar-logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+}
+
+/* Navigation */
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+
+  margin-left: auto;
+  margin-right: 28px;
+}
+
+.navbar-links a {
+  white-space: nowrap;
+}
+
+/* Right-side controls */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+.navbar-register {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 36px;
+
+  padding: 0 16px;
+
+  white-space: nowrap;
+
+  text-decoration: none;
+}
+
+/* Language */
+
+.language-toggle,
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--navy);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.language-toggle {
+  min-width: 58px;
+  height: 36px;
+
+  padding: 0 10px;
+
+  border-radius: 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 5px;
+}
+
+/* Mobile button */
+
+.mobile-menu-button {
+  display: none;
+
+  width: 36px;
+  height: 36px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--navy);
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .navbar-links {
+    gap: 18px;
+    margin-right: 15px;
+  }
+
+  .navbar-register {
+    padding: 0 12px;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 760px) {
+
+  .navbar-container {
+    min-height: 66px;
+    padding: 0 18px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-register {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: inline-flex;
+  }
+
+  .navbar-actions {
+    margin-left: auto;
+  }
+
+  .mobile-navbar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    padding: 10px 18px 18px;
+
+    background: var(--surface);
+
+    border-top: 1px solid var(--border);
+  }
+
+  .mobile-navbar-menu a {
+    padding: 13px 4px;
+
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-navbar-menu .mobile-register {
+    margin-top: 12px;
+
+    padding: 11px 15px;
+
+    text-align: center;
+
+    color: white;
+
+    background: var(--green);
+
+    border: none;
+    border-radius: 5px;
+  }
+
+}
+
+/* =========================================================
+   DARK MODE - READABILITY FIXES
+   ========================================================= */
+
+   [data-theme="dark"] {
+    color-scheme: dark;
+  }
+  
+  /* Main text */
+  [data-theme="dark"] body {
+    background: #0f1720;
+    color: #f1f5f9;
+  }
+  
+  /* Headings */
+  [data-theme="dark"] h1,
+  [data-theme="dark"] h2,
+  [data-theme="dark"] h3,
+  [data-theme="dark"] h4,
+  [data-theme="dark"] strong {
+    color: #f8fafc;
+  }
+  
+  /* Normal paragraphs and secondary text */
+  [data-theme="dark"] p {
+    color: #cbd5e1;
+  }
+  
+  /* Eyebrows / small labels */
+  [data-theme="dark"] .section-eyebrow,
+  [data-theme="dark"] .hero-eyebrow,
+  [data-theme="dark"] .journey-label {
+    color: #94a3b8;
+  }
+  
+  /* =========================================================
+     NAVBAR
+     ========================================================= */
+  
+  [data-theme="dark"] .navbar,
+  [data-theme="dark"] .site-header {
+    background: #111827;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .navbar a,
+  [data-theme="dark"] .site-header a {
+    color: #e2e8f0;
+  }
+  
+  [data-theme="dark"] .navbar a:hover,
+  [data-theme="dark"] .site-header a:hover {
+    color: #ffffff;
+  }
+  
+  /* =========================================================
+     HERO
+     ========================================================= */
+  
+  [data-theme="dark"] .hero {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .hero h1 {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .hero-description {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .hero-trust div {
+    color: #cbd5e1;
+  }
+  
+  /* Journey cards */
+  [data-theme="dark"] .journey-node {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .journey-node strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .journey-node span {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .journey-line {
+    background: #475569;
+  }
+  
+  [data-theme="dark"] .node-number {
+    color: #94a3b8;
+  }
+  
+  /* =========================================================
+     SERVICES
+     ========================================================= */
+  
+  [data-theme="dark"] .services-section {
+    background: #111827;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .service-card {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .service-card h3,
+  [data-theme="dark"] .service-card strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .service-card p {
+    color: #cbd5e1;
+  }
+  
+  /* =========================================================
+     DEPARTMENTS
+     ========================================================= */
+  
+  [data-theme="dark"] .departments-section {
+    background: #0f1720;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .department-card {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .department-card h3 {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .department-card p {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .department-card-top > span {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .department-icon-box {
+    background: #273449;
+    color: #e2e8f0;
+  }
+  
+  /* =========================================================
+     HOW IT WORKS
+     ========================================================= */
+  
+  [data-theme="dark"] .how-section {
+    background: #111827;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .how-heading h2 {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .how-heading p {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .how-step h3 {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .how-step p {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .how-step-number {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .how-step-icon {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+  }
+  
+  [data-theme="dark"] .how-line {
+    background: #475569;
+  }
+  
+  /* =========================================================
+     REGISTER + TRACK PAGES
+     ========================================================= */
+  
+  [data-theme="dark"] .register-page,
+  [data-theme="dark"] .track-page {
+    background: #0f1720;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .register-header h1,
+  [data-theme="dark"] .track-header h1 {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .register-header p,
+  [data-theme="dark"] .track-header p {
+    color: #cbd5e1;
+  }
+  
+  /* Form sections */
+  [data-theme="dark"] .form-section {
+    background: #111827;
+    border-color: #334155;
+  }
+  
+  [data-theme="dark"] .form-section-title {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .form-section-title span {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .form-field label {
+    color: #e2e8f0;
+  }
+  
+  [data-theme="dark"] .form-field small {
+    color: #94a3b8;
+  }
+  
+  /* Inputs */
+  [data-theme="dark"] input,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: #475569;
+  }
+  
+  [data-theme="dark"] input::placeholder,
+  [data-theme="dark"] textarea::placeholder {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] input:focus,
+  [data-theme="dark"] textarea:focus,
+  [data-theme="dark"] select:focus {
+    border-color: #64748b;
+  }
+  
+  /* Select dropdown */
+  [data-theme="dark"] option {
+    background: #1e293b;
+    color: #f8fafc;
+  }
+  
+  /* Location button */
+  [data-theme="dark"] .location-button {
+    color: #e2e8f0;
+    border-color: #475569;
+    background: #1e293b;
+  }
+  
+  /* Upload box */
+  [data-theme="dark"] .upload-box {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .upload-box strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .upload-box span {
+    color: #94a3b8;
+  }
+  
+  /* Submit area */
+  [data-theme="dark"] .form-submit {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .form-submit span {
+    color: #94a3b8;
+  }
+  
+  /* =========================================================
+     TRACK RESULTS
+     ========================================================= */
+  
+  [data-theme="dark"] .track-search {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .track-input-wrapper {
+    background: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+  }
+  
+  [data-theme="dark"] .track-input-wrapper input {
+    background: transparent;
+    border: none;
+  }
+  
+  [data-theme="dark"] .tracking-result {
+    background: #111827;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .result-label {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .tracking-summary strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .tracking-detail span {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .tracking-detail strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .tracking-divider {
+    background: #334155;
+  }
+  
+  [data-theme="dark"] .timeline-item strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .timeline-item span {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .timeline-icon {
+    color: #e2e8f0;
+  }
+  
+  /* =========================================================
+     SUCCESS PAGE
+     ========================================================= */
+  
+  [data-theme="dark"] .success-page {
+    background: #0f1720;
+  }
+  
+  [data-theme="dark"] .success-card {
+    background: #111827;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .success-card h1 {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .success-card p {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .grievance-id {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  [data-theme="dark"] .grievance-id span {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .grievance-id strong {
+    color: #f8fafc;
+  }
+  
+  /* =========================================================
+     FOOTER
+     ========================================================= */
+  
+  [data-theme="dark"] .site-footer {
+    background: #080d14;
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .footer-brand strong {
+    color: #f8fafc;
+  }
+  
+  [data-theme="dark"] .footer-brand p {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .footer-links span {
+    color: #94a3b8;
+  }
+  
+  [data-theme="dark"] .footer-links a {
+    color: #cbd5e1;
+  }
+  
+  [data-theme="dark"] .footer-links a:hover {
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] .footer-bottom {
+    color: #94a3b8;
+    border-color: #334155;
+  }
+  
+  [data-theme="dark"] .footer-note {
+    color: #94a3b8;
+  }
+  
+  /* =========================================================
+     BUTTONS
+     ========================================================= */
+  
+  [data-theme="dark"] .secondary-button {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: #475569;
+  }
+  
+  [data-theme="dark"] .secondary-button:hover {
+    background: #273449;
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] .primary-button {
+    color: #ffffff;
+  }
+  
+  /* =========================================================
+     GENERAL LINKS / TEXT
+     ========================================================= */
+  
+  [data-theme="dark"] a {
+    color: #e2e8f0;
+  }
+  
+  [data-theme="dark"] a:hover {
+    color: #ffffff;
+  }
+
+  /* =========================================================
+   DARK MODE - GLOBAL VISIBILITY FIX
+   ========================================================= */
+
+/* ---------- NAVBAR ---------- */
+
+[data-theme="dark"] .navbar,
+[data-theme="dark"] nav {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .navbar *,
+[data-theme="dark"] nav * {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .navbar a,
+[data-theme="dark"] nav a {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .navbar a:hover,
+[data-theme="dark"] nav a:hover {
+  color: #ffffff !important;
+}
+
+/* Navbar buttons */
+[data-theme="dark"] .navbar button,
+[data-theme="dark"] nav button {
+  color: #f8fafc !important;
+}
+
+/* ---------- HERO ---------- */
+
+[data-theme="dark"] .hero {
+  background: #0f1720;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .hero * {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .hero h1 *,
+[data-theme="dark"] .hero strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hero-description {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .hero-eyebrow {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .hero-trust,
+[data-theme="dark"] .hero-trust div {
+  color: #cbd5e1 !important;
+}
+
+/* ---------- HERO BUTTONS ---------- */
+
+[data-theme="dark"] .hero .primary-button {
+  background: #f8fafc !important;
+  color: #0f1720 !important;
+  border-color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hero .primary-button *,
+[data-theme="dark"] .hero .primary-button svg {
+  color: #0f1720 !important;
+}
+
+[data-theme="dark"] .hero .secondary-button {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+[data-theme="dark"] .hero .secondary-button *,
+[data-theme="dark"] .hero .secondary-button svg {
+  color: #f8fafc !important;
+}
+
+/* ---------- JOURNEY ---------- */
+
+[data-theme="dark"] .journey-label {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .journey-node,
+[data-theme="dark"] .journey-node * {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .journey-node span {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .node-number {
+  color: #94a3b8 !important;
+}
+
+/* ---------- ALL SECTION HEADINGS ---------- */
+
+[data-theme="dark"] .section-heading *,
+[data-theme="dark"] .how-heading *,
+[data-theme="dark"] .services-heading * {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .section-heading p,
+[data-theme="dark"] .how-heading p,
+[data-theme="dark"] .services-heading p {
+  color: #cbd5e1 !important;
+}
+
+/* ---------- CARDS ---------- */
+
+[data-theme="dark"] .service-card *,
+[data-theme="dark"] .department-card *,
+[data-theme="dark"] .how-step * {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .service-card p,
+[data-theme="dark"] .department-card p,
+[data-theme="dark"] .how-step p {
+  color: #cbd5e1 !important;
+}
+
+/* ---------- ICONS ---------- */
+
+[data-theme="dark"] svg {
+  color: currentColor;
+}
+
+/* ---------- PRIMARY BUTTONS EVERYWHERE ---------- */
+
+[data-theme="dark"] .primary-button {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .primary-button svg {
+  color: currentColor !important;
+}
+
+/* =========================================================
+   FINAL DARK MODE VISIBILITY FIX
+   ========================================================= */
+
+/* =========================
+   NAVBAR / HEADER
+   ========================= */
+
+   [data-theme="dark"] header {
+    background: #111827 !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+  }
+  
+  [data-theme="dark"] header a,
+  [data-theme="dark"] header button,
+  [data-theme="dark"] header span,
+  [data-theme="dark"] header div {
+    color: #e2e8f0 !important;
+  }
+  
+  [data-theme="dark"] header a:hover {
+    color: #ffffff !important;
+  }
+  
+  /* Navbar logo / brand */
+  [data-theme="dark"] header strong,
+  [data-theme="dark"] header h1,
+  [data-theme="dark"] header h2 {
+    color: #f8fafc !important;
+  }
+  
+  /* Language button */
+  [data-theme="dark"] header button {
+    background: #1e293b !important;
+    border-color: #475569 !important;
+    color: #f8fafc !important;
+  }
+  
+  /* Theme toggle button */
+  [data-theme="dark"] header button svg {
+    color: #f8fafc !important;
+  }
+  
+  /* =========================
+     HERO
+     ========================= */
+  
+  [data-theme="dark"] .hero {
+    background-color: #0f1720 !important;
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .hero h1 {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .hero-description {
+    color: #cbd5e1 !important;
+  }
+  
+  /* Hero Register button */
+  [data-theme="dark"] .hero .primary-button {
+    background: #f8fafc !important;
+    color: #0f1720 !important;
+    border-color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .hero .primary-button svg {
+    color: #0f1720 !important;
+  }
+  
+  /* Hero Track button */
+  [data-theme="dark"] .hero .secondary-button {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }
+  
+  [data-theme="dark"] .hero .secondary-button svg {
+    color: #f8fafc !important;
+  }
+  
+  /* Hero trust text */
+  [data-theme="dark"] .hero-trust div {
+    color: #cbd5e1 !important;
+  }
+  
+  /* =========================
+     JOURNEY CARD
+     ========================= */
+  
+  [data-theme="dark"] .journey {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .journey-node {
+    background: #1e293b !important;
+    border-color: #475569 !important;
+  }
+  
+  [data-theme="dark"] .journey-node strong {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .journey-node span {
+    color: #cbd5e1 !important;
+  }
+  
+  [data-theme="dark"] .journey-label {
+    color: #cbd5e1 !important;
+  }
+  
+  /* =========================
+     REGISTER PAGE
+     ========================= */
+  
+  [data-theme="dark"] .register-page {
+    background: #0f1720 !important;
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .register-header h1 {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .register-header p {
+    color: #cbd5e1 !important;
+  }
+  
+  [data-theme="dark"] .form-section {
+    background: #111827 !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+  }
+  
+  [data-theme="dark"] .form-section-title,
+  [data-theme="dark"] .form-field label {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .form-field input,
+  [data-theme="dark"] .form-field textarea,
+  [data-theme="dark"] .form-field select {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }
+  
+  [data-theme="dark"] .form-field input::placeholder,
+  [data-theme="dark"] .form-field textarea::placeholder {
+    color: #94a3b8 !important;
+  }
+  
+  [data-theme="dark"] .form-field small {
+    color: #94a3b8 !important;
+  }
+  
+  /* =========================
+     TRACK PAGE
+     ========================= */
+  
+  [data-theme="dark"] .track-page {
+    background: #0f1720 !important;
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .track-header h1 {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .track-header p {
+    color: #cbd5e1 !important;
+  }
+  
+  [data-theme="dark"] .track-input-wrapper {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }
+  
+  [data-theme="dark"] .track-input-wrapper input {
+    background: transparent !important;
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .track-input-wrapper input::placeholder {
+    color: #94a3b8 !important;
+  }
+  
+  [data-theme="dark"] .tracking-result {
+    background: #111827 !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+  }
+  
+  [data-theme="dark"] .tracking-result strong {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .tracking-result span {
+    color: #cbd5e1 !important;
+  }
+  
+  [data-theme="dark"] .result-label {
+    color: #94a3b8 !important;
+  }
+  
+  [data-theme="dark"] .timeline-item strong {
+    color: #f8fafc !important;
+  }
+  
+  [data-theme="dark"] .timeline-item span {
+    color: #cbd5e1 !important;
+  }
+  /* =========================================================
+   FINAL DARK MODE - REMAINING VISIBILITY FIXES
+   ========================================================= */
+
+/* =========================
+   NYAYSETU JOURNEY LABEL
+   ========================= */
+
+[data-theme="dark"] .journey-label {
+  color: #cbd5e1 !important;
+  background: transparent !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .hero-visual .journey-label {
+  color: #cbd5e1 !important;
+}
+
+/* =========================
+   REGISTER - SUBMIT SECTION
+   ========================= */
+
+[data-theme="dark"] .form-submit {
+  background: #111827 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .form-submit strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .form-submit span {
+  color: #cbd5e1 !important;
+}
+
+/* Submit Grievance button */
+[data-theme="dark"] .form-submit .primary-button {
+  background: #f8fafc !important;
+  color: #0f1720 !important;
+  border-color: #f8fafc !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .form-submit .primary-button svg {
+  color: #0f1720 !important;
+}
+
+/* =========================
+   REGISTER FOOTER / BOTTOM AREA
+   ========================= */
+
+[data-theme="dark"] .register-page ~ .site-footer,
+[data-theme="dark"] .register-page + .site-footer {
+  background: #080d14 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .site-footer * {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .site-footer strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .site-footer a {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .site-footer a:hover {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .site-footer span {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .site-footer svg {
+  color: #e2e8f0 !important;
+}
+
+/* =========================================================
+   FINAL 2 DARK MODE CONTRAST FIXES
+   ========================================================= */
+
+/* NYAYSETU JOURNEY LABEL */
+[data-theme="dark"] .journey-label {
+  color: #1e293b !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+/* TRACK GRIEVANCE BUTTON */
+[data-theme="dark"] .track-search .primary-button {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid #f8fafc !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .track-search .primary-button svg {
+  color: #0f172a !important;
+}
+
+/* =========================================================
+   NYAYSETU JOURNEY - FINAL TEXT VISIBILITY FIX
+   ========================================================= */
+
+   [data-theme="dark"] .hero-visual .journey-label {
+    color: #0f172a !important;
+    background-color: transparent !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: none !important;
+    -webkit-text-fill-color: #0f172a !important;
+  }
+  
+  [data-theme="dark"] .hero-visual .journey-label span {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+  }

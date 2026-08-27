@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   MapPin,
   Paperclip,
@@ -6,7 +7,11 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { useSite } from "../context/SiteContext";
+
 function Register() {
+  const { t } = useSite();
+
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
@@ -18,29 +23,35 @@ function Register() {
     return (
       <section className="success-page">
         <div className="success-card">
+
           <div className="success-icon">
             <CheckCircle2 size={40} />
           </div>
 
           <span className="section-eyebrow">
-            GRIEVANCE RECEIVED
+            {t.grievanceReceived}
           </span>
 
-          <h1>Your grievance is on its way.</h1>
+          <h1>
+            {t.grievanceOnItsWay}
+          </h1>
 
           <p>
-            NyaySetu has received your grievance. It can now
-            move through analysis and departmental routing.
+            {t.grievanceReceivedDescription}
           </p>
 
           <div className="grievance-id">
-            <span>GRIEVANCE ID</span>
+            <span>{t.grievanceId}</span>
             <strong>NS-2026-001284</strong>
           </div>
 
-          <a href="/" className="primary-button">
-            Return to Home
+          <a
+            href="/"
+            className="primary-button"
+          >
+            {t.returnHome}
           </a>
+
         </div>
       </section>
     );
@@ -51,116 +62,179 @@ function Register() {
       <div className="register-container">
 
         <div className="register-header">
+
           <span className="section-eyebrow">
-            CITIZEN SERVICES
+            {t.citizenServices}
           </span>
 
-          <h1>Register a Grievance</h1>
+          <h1>
+            {t.registerPageTitle}
+          </h1>
 
           <p>
-            Tell us what happened. You don't need to know
-            which department should handle it — NyaySetu
-            helps identify the right path.
+            {t.registerPageDescription}
           </p>
+
         </div>
 
-        <form className="grievance-form" onSubmit={handleSubmit}>
+        <form
+          className="grievance-form"
+          onSubmit={handleSubmit}
+        >
+
+          {/* 01 - CITIZEN INFORMATION */}
 
           <div className="form-section">
+
             <div className="form-section-title">
               <span>01</span>
-              Citizen Information
+              {t.citizenInformation}
             </div>
 
             <div className="form-grid">
 
               <div className="form-field">
-                <label>Full Name</label>
+
+                <label>
+                  {t.name}
+                </label>
+
                 <input
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder={t.namePlaceholder}
                   required
                 />
+
               </div>
 
               <div className="form-field">
-                <label>Mobile Number</label>
+
+                <label>
+                  {t.phone}
+                </label>
+
                 <input
                   type="tel"
-                  placeholder="Enter mobile number"
+                  placeholder={t.phonePlaceholder}
                   required
                 />
+
               </div>
 
             </div>
           </div>
 
+          {/* 02 - GRIEVANCE DETAILS */}
+
           <div className="form-section">
 
             <div className="form-section-title">
               <span>02</span>
-              Grievance Details
+              {t.grievanceDetails}
             </div>
 
             <div className="form-field">
-              <label>What happened?</label>
+
+              <label>
+                {t.whatHappened}
+              </label>
 
               <textarea
                 rows="6"
-                placeholder="Describe your issue in your own words..."
+                placeholder={t.grievancePlaceholder}
                 required
               />
+
             </div>
 
             <div className="form-field">
 
-              <label>What kind of issue is this?</label>
+              <label>
+                {t.issueType}
+              </label>
 
-              <select required defaultValue="">
-                <option value="" disabled>
-                  Select if you know
+              <select
+                required
+                defaultValue=""
+              >
+
+                <option
+                  value=""
+                  disabled
+                >
+                  {t.selectIfKnown}
                 </option>
 
-                <option>Roads & Infrastructure</option>
-                <option>Water Supply</option>
-                <option>Electricity</option>
-                <option>Sanitation</option>
-                <option>Public Safety</option>
-                <option>Other</option>
+                <option>
+                  {t.roadsInfrastructure}
+                </option>
+
+                <option>
+                  {t.waterSupply}
+                </option>
+
+                <option>
+                  {t.electricity}
+                </option>
+
+                <option>
+                  {t.sanitation}
+                </option>
+
+                <option>
+                  {t.publicSafety}
+                </option>
+
+                <option>
+                  {t.other}
+                </option>
+
               </select>
 
               <small>
-                Not sure? Leave the classification to NyaySetu.
+                {t.classificationNote}
               </small>
 
             </div>
 
           </div>
 
+          {/* 03 - LOCATION */}
+
           <div className="form-section">
 
             <div className="form-section-title">
               <span>03</span>
-              Location
+              {t.location}
             </div>
 
             <div className="form-grid">
 
               <div className="form-field">
-                <label>City / District</label>
+
+                <label>
+                  {t.cityDistrict}
+                </label>
+
                 <input
                   type="text"
-                  placeholder="Enter city or district"
+                  placeholder={t.cityDistrictPlaceholder}
                   required
                 />
+
               </div>
 
               <div className="form-field">
-                <label>Area / Locality</label>
+
+                <label>
+                  {t.areaLocality}
+                </label>
+
                 <input
                   type="text"
-                  placeholder="Enter locality"
+                  placeholder={t.areaLocalityPlaceholder}
                 />
+
               </div>
 
             </div>
@@ -170,16 +244,18 @@ function Register() {
               className="location-button"
             >
               <MapPin size={17} />
-              Use current location
+              {t.useCurrentLocation}
             </button>
 
           </div>
+
+          {/* 04 - SUPPORTING EVIDENCE */}
 
           <div className="form-section">
 
             <div className="form-section-title">
               <span>04</span>
-              Supporting Evidence
+              {t.supportingEvidence}
             </div>
 
             <label className="upload-box">
@@ -187,10 +263,15 @@ function Register() {
               <Paperclip size={22} />
 
               <div>
-                <strong>Attach a photo or document</strong>
+
+                <strong>
+                  {t.attachDocument}
+                </strong>
+
                 <span>
-                  PNG, JPG or PDF · Optional
+                  {t.fileTypes}
                 </span>
+
               </div>
 
               <input type="file" />
@@ -199,18 +280,27 @@ function Register() {
 
           </div>
 
+          {/* SUBMIT */}
+
           <div className="form-submit">
 
             <div>
-              <strong>Ready to submit?</strong>
+
+              <strong>
+                {t.readyToSubmit}
+              </strong>
 
               <span>
-                Your grievance will be securely recorded.
+                {t.securelyRecorded}
               </span>
+
             </div>
 
-            <button type="submit" className="primary-button">
-              Submit Grievance
+            <button
+              type="submit"
+              className="primary-button"
+            >
+              {t.submit}
               <ArrowRight size={18} />
             </button>
 
