@@ -14,9 +14,44 @@ function Register() {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [complaintText, setComplaintText] = useState("");
+  const [analysis, setAnalysis] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/complaints/analyze",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            text: complaintText
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("AI analysis failed");
+      }
+
+      const result = await response.json();
+
+      setAnalysis(result);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setError("Unable to analyze your grievance. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -143,8 +178,9 @@ function Register() {
                 rows="6"
                 placeholder={t.grievancePlaceholder}
                 required
+                value={complaintText}
+                onChange={(e) => setComplaintText(e.target.value)}
               />
-
             </div>
 
             <div className="form-field">

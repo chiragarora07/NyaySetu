@@ -1,0 +1,119 @@
+[
+    {
+      "department": "Water Department",
+      "categories": [
+        "Water Supply",
+        "Water Leakage",
+        "Pipeline",
+        "Water Contamination"
+      ],
+      "responsibilities": [
+        "Water supply interruptions",
+        "Water pipeline leakage",
+        "Damaged public water pipelines",
+        "Water contamination complaints"
+      ],
+      "priority_guidelines": {
+        "Critical": "Water contamination or a situation threatening public health",
+        "High": "Extended water interruption affecting residents",
+        "Medium": "Localized water issue affecting limited households",
+        "Low": "Minor non-urgent water-related issue"
+      },
+      "keywords": [
+        "water",
+        "tap",
+        "pipeline",
+        "leak",
+        "supply",
+        "drinking water",
+        "contamination"
+      ]
+    },
+    {
+      "department": "Public Works Department",
+      "categories": [
+        "Roads",
+        "Potholes",
+        "Street Infrastructure"
+      ],
+      "responsibilities": [
+        "Damaged roads",
+        "Potholes",
+        "Broken public infrastructure",
+        "Road safety issues"
+      ],
+      "priority_guidelines": {
+        "Critical": "Immediate danger to life or major accident risk",
+        "High": "Dangerous road condition affecting significant traffic",
+        "Medium": "Road damage causing inconvenience",
+        "Low": "Minor infrastructure issue"
+      },
+      "keywords": [
+        "road",
+        "pothole",
+        "street",
+        "traffic",
+        "footpath",
+        "bridge",
+        "road damage"
+      ]
+    },
+    {
+      "department": "Electricity Department",
+      "categories": [
+        "Electricity",
+        "Power Outage",
+        "Transformer"
+      ],
+      "responsibilities": [
+        "Power outages",
+        "Damaged electrical infrastructure",
+        "Transformer problems",
+        "Electricity supply issues"
+      ],
+      "priority_guidelines": {
+        "Critical": "Exposed live wires or immediate electrocution risk",
+        "High": "Extended outage affecting many residents",
+        "Medium": "Localized electricity problem",
+        "Low": "Minor electrical infrastructure issue"
+      },
+      "keywords": [
+        "electricity",
+        "power",
+        "outage",
+        "transformer",
+        "wire",
+        "voltage",
+        "electric"
+      ]
+    },
+    {
+      "department": "Sanitation Department",
+      "categories": [
+        "Garbage",
+        "Waste",
+        "Sanitation"
+      ],
+      "responsibilities": [
+        "Garbage collection",
+        "Waste accumulation",
+        "Public sanitation",
+        "Unclean public areas"
+      ],
+      "priority_guidelines": {
+        "Critical": "Major public health hazard",
+        "High": "Large waste accumulation creating health risks",
+        "Medium": "Regular garbage collection issue",
+        "Low": "Minor cleanliness complaint"
+      },
+      "keywords": [
+        "garbage",
+        "waste",
+        "trash",
+        "dirty",
+        "cleaning",
+        "sanitation",
+        "dump"
+      ]
+    }
+  ]
