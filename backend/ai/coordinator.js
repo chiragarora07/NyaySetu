@@ -62,7 +62,24 @@ Return ONLY valid JSON:
 `;
 
   try {
-    const result = await model.generateContent(prompt);
+    let result;
+
+for (let attempt = 1; attempt <= 3; attempt++) {
+  try {
+    result = await model.generateContent(prompt);
+    break;
+  } catch (error) {
+    if (error.status !== 503 || attempt === 3) {
+      throw error;
+    }
+
+    console.log(`Gemini temporarily unavailable. Retrying (${attempt}/3)...`);
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, attempt * 2000)
+    );
+  }
+}
 
     const responseText = result.response.text().trim();
 

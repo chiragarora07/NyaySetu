@@ -31,7 +31,7 @@ def create_complaint(
 ):
     new_complaint = Complaint(
         citizen_name=complaint.citizen_name,
-        citizen_email=complaint.citizen_email,
+        citizen_mobile=complaint.citizen_mobile,
         description=complaint.description,
         location=complaint.location,
         category=complaint.category,
