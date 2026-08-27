@@ -257,6 +257,11 @@ const translations = {
 
         submit: "Submit Grievance",
 
+        submitting: "Submitting...",
+
+        submitError:
+            "Unable to submit your grievance. Please try again.",
+
         grievanceReceived: "GRIEVANCE RECEIVED",
 
         grievanceOnItsWay:
@@ -626,6 +631,11 @@ const translations = {
             "आपकी शिकायत सुरक्षित रूप से दर्ज की जाएगी।",
 
         submit: "शिकायत जमा करें",
+
+        submitting: "जमा किया जा रहा है...",
+
+        submitError:
+            "आपकी शिकायत जमा नहीं हो सकी। कृपया फिर से प्रयास करें।",
 
         grievanceReceived: "शिकायत प्राप्त हुई",
 

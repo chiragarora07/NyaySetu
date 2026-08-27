@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from database import engine, Base, get_db
+from database import engine, Base, get_db, ensure_complaint_columns
 from models import Complaint, Department
 from schemas import ComplaintCreate, ComplaintResponse, ComplaintUpdate
 
@@ -17,6 +17,7 @@ app.add_middleware(
 )
 
 Base.metadata.create_all(bind=engine)
+ensure_complaint_columns()
 
 
 @app.get("/")
@@ -31,7 +32,7 @@ def create_complaint(
 ):
     new_complaint = Complaint(
         citizen_name=complaint.citizen_name,
-        citizen_email=complaint.citizen_email,
+        citizen_mobile=complaint.citizen_mobile,
         description=complaint.description,
         location=complaint.location,
         category=complaint.category,
@@ -43,10 +44,12 @@ def create_complaint(
 
     return new_complaint
 
+
 @app.get("/api/complaints", response_model=list[ComplaintResponse])
 def get_complaints(db: Session = Depends(get_db)):
     complaints = db.query(Complaint).order_by(Complaint.id.desc()).all()
     return complaints
+
 
 @app.patch("/api/complaints/{complaint_id}", response_model=ComplaintResponse)
 def update_complaint(
@@ -57,7 +60,7 @@ def update_complaint(
     complaint = db.query(Complaint).filter(Complaint.id == complaint_id).first()
 
     if not complaint:
-        return {"error": "Complaint not found"}
+        raise HTTPException(status_code=404, detail="Complaint not found")
 
     if update.category is not None:
         complaint.category = update.category

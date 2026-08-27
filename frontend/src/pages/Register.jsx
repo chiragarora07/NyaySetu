@@ -13,11 +13,15 @@ function Register() {
   const { t } = useSite();
 
   const [submitted, setSubmitted] = useState(false);
-
+  const [citizenName, setCitizenName] = useState("");
+  const [citizenMobile, setCitizenMobile] = useState("");
   const [complaintText, setComplaintText] = useState("");
+  const [location, setLocation] = useState("");
+  const [grievanceId, setGrievanceId] = useState(null);
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,29 +30,33 @@ function Register() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/complaints/analyze",
+        "http://localhost:5000/api/complaints/submit",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            text: complaintText
+            citizen_name: citizenName,
+            citizen_mobile: citizenMobile,
+            description: complaintText,
+            location: location
           })
         }
       );
 
+      const result = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error("AI analysis failed");
+        throw new Error(result.error || t.submitError);
       }
 
-      const result = await response.json();
-
       setAnalysis(result);
+      setGrievanceId(result.complaintId);
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setError("Unable to analyze your grievance. Please try again.");
+      setError(err.message || t.submitError);
     } finally {
       setLoading(false);
     }
@@ -77,7 +85,7 @@ function Register() {
 
           <div className="grievance-id">
             <span>{t.grievanceId}</span>
-            <strong>NS-2026-001284</strong>
+            <strong>{grievanceId}</strong>
           </div>
 
           <a
@@ -112,6 +120,12 @@ function Register() {
 
         </div>
 
+        {error && (
+          <p className="form-error">
+            {error}
+          </p>
+        )}
+
         <form
           className="grievance-form"
           onSubmit={handleSubmit}
@@ -138,6 +152,8 @@ function Register() {
                   type="text"
                   placeholder={t.namePlaceholder}
                   required
+                  value={citizenName}
+                  onChange={(e) => setCitizenName(e.target.value)}
                 />
 
               </div>
@@ -152,6 +168,8 @@ function Register() {
                   type="tel"
                   placeholder={t.phonePlaceholder}
                   required
+                  value={citizenMobile}
+                  onChange={(e) => setCitizenMobile(e.target.value)}
                 />
 
               </div>
@@ -256,6 +274,8 @@ function Register() {
                   type="text"
                   placeholder={t.cityDistrictPlaceholder}
                   required
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                 />
 
               </div>
@@ -335,9 +355,10 @@ function Register() {
             <button
               type="submit"
               className="primary-button"
+              disabled={loading}
             >
-              {t.submit}
-              <ArrowRight size={18} />
+              {loading ? t.submitting : t.submit}
+              {!loading && <ArrowRight size={18} />}
             </button>
 
           </div>

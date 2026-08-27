@@ -14,7 +14,7 @@ class Complaint(Base):
 
     id = Column(Integer, primary_key=True)
     citizen_name = Column(String(100))
-    citizen_email = Column(String(150))
+    citizen_mobile = Column(String(20))
     description = Column(Text, nullable=False)
     location = Column(Text)
     category = Column(String(100))

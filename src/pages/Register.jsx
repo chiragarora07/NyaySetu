@@ -79,6 +79,13 @@ if (submitted) {
           the appropriate department and priority.
         </p>
 
+        {grievanceId != null && (
+          <div className="grievance-id">
+            <span>GRIEVANCE ID</span>
+            <strong>{grievanceId}</strong>
+          </div>
+        )}
+
         {analysis && (
           <div className="analysis-result">
             <div>
@@ -159,12 +166,12 @@ if (submitted) {
               <div className="form-field">
                 <label>Full Name</label>
                 <input
-  type="text"
-  placeholder="Enter city or district"
-  required
-  value={location}
-  onChange={(e) => setLocation(e.target.value)}
-/>
+                  type="text"
+                  placeholder="Enter your full name"
+                  required
+                  value={citizenName}
+                  onChange={(e) => setCitizenName(e.target.value)}
+                />
               </div>
 
               <div className="form-field">
@@ -240,6 +247,8 @@ if (submitted) {
                   type="text"
                   placeholder="Enter city or district"
                   required
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                 />
               </div>
 

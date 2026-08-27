@@ -3,9 +3,55 @@ const cors = require("cors");
 const { analyzeWithAI } = require("./ai/coordinator");
 
 const app = express();
+const FASTAPI_BASE_URL = "http://127.0.0.1:8000";
 
 app.use(cors());
 app.use(express.json());
+
+function mapDepartment(departments, aiDepartment) {
+  if (!aiDepartment || !Array.isArray(departments) || departments.length === 0) {
+    return null;
+  }
+
+  const target = String(aiDepartment).toLowerCase().trim();
+
+  const exactMatch = departments.find(
+    (item) => String(item.name || "").toLowerCase() === target
+  );
+
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  const includesMatch = departments.find((item) => {
+    const name = String(item.name || "").toLowerCase();
+    return name.includes(target) || target.includes(name);
+  });
+
+  if (includesMatch) {
+    return includesMatch;
+  }
+
+  const significantWords = target
+    .split(/\s+/)
+    .filter((word) => word.length > 3 && word !== "department");
+
+  return (
+    departments.find((item) => {
+      const name = String(item.name || "").toLowerCase();
+      return significantWords.some((word) => name.includes(word));
+    }) || null
+  );
+}
+
+async function readErrorMessage(response, fallback) {
+  try {
+    const data = await response.json();
+    return data.detail || data.error || fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 app.get("/", (req, res) => {
   res.json({
@@ -33,10 +79,11 @@ app.post("/api/complaints/analyze", async (req, res) => {
     });
   }
 });
+
 app.post("/api/complaints/submit", async (req, res) => {
   const {
     citizen_name,
-    citizen_email,
+    citizen_mobile,
     description,
     location
   } = req.body;
@@ -48,53 +95,43 @@ app.post("/api/complaints/submit", async (req, res) => {
   }
 
   try {
-    // 1. Analyze complaint using Gemini + RAG
     const analysis = await analyzeWithAI(description);
 
-    // 2. Find department ID
-    const departmentsResponse = await fetch(
-      "http://127.0.0.1:8000/api/departments"
-    );
+    const departmentsResponse = await fetch(`${FASTAPI_BASE_URL}/api/departments`);
 
     if (!departmentsResponse.ok) {
       throw new Error("Could not fetch departments");
     }
 
     const departments = await departmentsResponse.json();
+    const department = mapDepartment(departments, analysis.department);
 
-    const department = departments.find(
-      (item) =>
-        item.name.toLowerCase() ===
-        analysis.department.toLowerCase()
-    );
-
-    // 3. Create complaint in PostgreSQL
-    const complaintResponse = await fetch(
-      "http://127.0.0.1:8000/api/complaints",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          citizen_name: citizen_name || null,
-          citizen_email: citizen_email || null,
-          description,
-          location: location || null,
-          category: analysis.category
-        })
-      }
-    );
+    const complaintResponse = await fetch(`${FASTAPI_BASE_URL}/api/complaints`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        citizen_name: citizen_name || null,
+        citizen_mobile: citizen_mobile || null,
+        description,
+        location: location || null,
+        category: analysis.category
+      })
+    });
 
     if (!complaintResponse.ok) {
-      throw new Error("Could not save complaint");
+      const message = await readErrorMessage(
+        complaintResponse,
+        "Could not save complaint"
+      );
+      throw new Error(message);
     }
 
     const complaint = await complaintResponse.json();
 
-    // 4. Update complaint with AI results
     const updateResponse = await fetch(
-      `http://127.0.0.1:8000/api/complaints/${complaint.id}`,
+      `${FASTAPI_BASE_URL}/api/complaints/${complaint.id}`,
       {
         method: "PATCH",
         headers: {
@@ -103,7 +140,7 @@ app.post("/api/complaints/submit", async (req, res) => {
         body: JSON.stringify({
           department_id: department ? department.id : null,
           priority: analysis.priority,
-          status: "Pending",
+          status: analysis.status || "Pending",
           ai_summary: analysis.summary,
           ai_analysis: analysis.reason
         })
@@ -116,21 +153,20 @@ app.post("/api/complaints/submit", async (req, res) => {
 
     const savedComplaint = await updateResponse.json();
 
-    // 5. Return everything to frontend
     res.json({
       complaintId: savedComplaint.id,
       ...analysis,
       departmentId: department ? department.id : null
     });
-
   } catch (error) {
     console.error("Complaint submission error:", error);
 
     res.status(500).json({
-      error: "Complaint submission failed"
+      error: error.message || "Complaint submission failed"
     });
   }
 });
+
 const PORT = 5000;
 
 app.listen(PORT, () => {

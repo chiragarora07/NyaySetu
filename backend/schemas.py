@@ -4,7 +4,7 @@ from typing import Optional
 
 class ComplaintCreate(BaseModel):
     citizen_name: Optional[str] = None
-    citizen_email: Optional[str] = None
+    citizen_mobile: Optional[str] = None
     description: str
     location: Optional[str] = None
     category: Optional[str] = None
@@ -13,7 +13,7 @@ class ComplaintCreate(BaseModel):
 class ComplaintResponse(BaseModel):
     id: int
     citizen_name: Optional[str] = None
-    citizen_email: Optional[str] = None
+    citizen_mobile: Optional[str] = None
     description: str
     location: Optional[str] = None
     category: Optional[str] = None
@@ -25,6 +25,7 @@ class ComplaintResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 class ComplaintUpdate(BaseModel):
     category: Optional[str] = None
