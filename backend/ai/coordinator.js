@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { retrieveRelevantKnowledge } = require("./rag");
+const { calculatePriority } = require("../priorityEngine");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -29,7 +30,7 @@ Your workflow:
 1. Understand the complaint.
 2. Use the retrieved knowledge when available.
 3. Identify the responsible department.
-4. Determine priority.
+4. Assess the severity and potential impact of the complaint.
 5. Generate a concise summary.
 6. Explain the decision.
 
@@ -53,7 +54,7 @@ Return ONLY valid JSON:
 {
   "category": "string",
   "department": "string",
-  "priority": "Critical | High | Medium | Low",
+  "severity": "Critical | High | Medium | Low",
   "summary": "string",
   "reason": "string",
   "status": "Pending"
@@ -71,15 +72,23 @@ Return ONLY valid JSON:
       .replace(/\s*```$/i, "")
       .trim();
 
-    const analysis = JSON.parse(cleanedResponse);
+      const analysis = JSON.parse(cleanedResponse);
 
-    return {
-      ...analysis,
-
-      // Useful for demonstrating the RAG pipeline
-      ragUsed: hasRelevantKnowledge,
-      retrievedSources: knowledge.map((item) => item.department)
-    };
+      const priorityResult = calculatePriority(
+        complaint,
+        0
+      );
+      
+      return {
+        ...analysis,
+      
+        priority: priorityResult.priority,
+        priorityScore: priorityResult.score,
+        priorityReason: priorityResult.reason,
+      
+        ragUsed: hasRelevantKnowledge,
+        retrievedSources: knowledge.map((item) => item.department)
+      };
   } catch (error) {
     console.error("Gemini analysis error:", error);
     throw new Error("AI analysis failed");
