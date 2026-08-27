@@ -7,9 +7,8 @@ import {
 } from "lucide-react";
 
 function Register() {
-  const [submitted, setSubmitted] = useState(false);
-
-  const [complaintText, setComplaintText] = useState("");
+const [submitted, setSubmitted] = useState(false);
+const [complaintText, setComplaintText] = useState("");
 const [analysis, setAnalysis] = useState(null);
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState("");
@@ -49,37 +48,66 @@ const handleSubmit = async (e) => {
   }
 };
 
-  if (submitted) {
-    return (
-      <section className="success-page">
-        <div className="success-card">
-          <div className="success-icon">
-            <CheckCircle2 size={40} />
-          </div>
-
-          <span className="section-eyebrow">
-            GRIEVANCE RECEIVED
-          </span>
-
-          <h1>Your grievance is on its way.</h1>
-
-          <p>
-            NyaySetu has received your grievance. It can now
-            move through analysis and departmental routing.
-          </p>
-
-          <div className="grievance-id">
-            <span>GRIEVANCE ID</span>
-            <strong>NS-2026-001284</strong>
-          </div>
-
-          <a href="/" className="primary-button">
-            Return to Home
-          </a>
+if (submitted) {
+  return (
+    <section className="success-page">
+      <div className="success-card">
+        <div className="success-icon">
+          <CheckCircle2 size={40} />
         </div>
-      </section>
-    );
-  }
+
+        <span className="section-eyebrow">
+          GRIEVANCE ANALYZED
+        </span>
+
+        <h1>Your grievance has been analyzed.</h1>
+
+        <p>
+          NyaySetu has analyzed your complaint and identified
+          the appropriate department and priority.
+        </p>
+
+        {analysis && (
+          <div className="analysis-result">
+            <div>
+              <span>Category</span>
+              <strong>{analysis.category}</strong>
+            </div>
+
+            <div>
+              <span>Department</span>
+              <strong>{analysis.department}</strong>
+            </div>
+
+            <div>
+              <span>Priority</span>
+              <strong>{analysis.priority}</strong>
+            </div>
+
+            <div>
+              <span>Summary</span>
+              <strong>{analysis.summary}</strong>
+            </div>
+
+            <div>
+              <span>Reason</span>
+              <strong>{analysis.priorityReason || analysis.reason}</strong>
+            </div>
+
+            <div>
+              <span>ANALYSIS STATUS</span>
+              <strong>Analyzed Successfully</strong>
+            </div>
+          </div>
+        )}
+
+        <a href="/" className="primary-button">
+          Return to Home
+        </a>
+      </div>
+    </section>
+  );
+}
 
   return (
     <section className="register-page">
@@ -246,9 +274,13 @@ const handleSubmit = async (e) => {
               </span>
             </div>
 
-            <button type="submit" className="primary-button">
-              Submit Grievance
-              <ArrowRight size={18} />
+            <button
+            type="submit"
+            className="primary-button"
+            disabled={loading}
+>
+            {loading ? "Analyzing..." : "Submit Grievance"}
+            {!loading && <ArrowRight size={18} />}
             </button>
 
           </div>
