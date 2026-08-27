@@ -14,10 +14,55 @@ function Track() {
   const { t } = useSite();
 
   const [searched, setSearched] = useState(false);
-
-  const handleSearch = (e) => {
+const [grievanceId, setGrievanceId] = useState("");
+const [complaint, setComplaint] = useState(null);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+const [department, setDepartment] = useState(null);
+  const handleSearch = async (e) => {
     e.preventDefault();
-    setSearched(true);
+  
+    setLoading(true);
+    setError("");
+    setComplaint(null);
+    setSearched(false);
+  
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/admin/complaints/${grievanceId.trim()}`
+      );
+  
+      if (!response.ok) {
+        throw new Error("Grievance not found");
+      }
+  
+      const data = await response.json();
+
+      setComplaint(data);
+      
+      if (data.department_id) {
+        const departmentResponse = await fetch(
+          "http://127.0.0.1:8004/api/departments"
+        );
+      
+        if (departmentResponse.ok) {
+          const departments = await departmentResponse.json();
+      
+          const matchedDepartment = departments.find(
+            (dept) => dept.id === data.department_id
+          );
+      
+          setDepartment(matchedDepartment || null);
+        }
+      }
+      
+      setSearched(true);
+    } catch (err) {
+      console.error(err);
+      setError("Grievance not found. Please check the grievance ID.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,7 +88,11 @@ function Track() {
         </div>
 
         {/* SEARCH */}
-
+        {error && (
+  <p className="form-error">
+    {error}
+  </p>
+)}
         <form
           className="track-search"
           onSubmit={handleSearch}
@@ -54,19 +103,22 @@ function Track() {
             <Search size={19} />
 
             <input
-              type="text"
-              placeholder={t.grievanceIdPlaceholder}
-              required
-            />
+  type="text"
+  placeholder={t.grievanceIdPlaceholder}
+  required
+  value={grievanceId}
+  onChange={(e) => setGrievanceId(e.target.value)}
+/>
 
           </div>
 
           <button
-            type="submit"
-            className="primary-button"
-          >
-            {t.trackGrievance}
-          </button>
+  type="submit"
+  className="primary-button"
+  disabled={loading}
+>
+  {loading ? "Searching..." : t.trackGrievance}
+</button>
 
         </form>
 
@@ -84,18 +136,15 @@ function Track() {
                 </span>
 
                 <strong>
-                  NS-2026-001284
-                </strong>
+  {complaint && `NS-${String(complaint.id).padStart(6, "0")}`}
+</strong>
 
               </div>
 
               <div className="status-badge">
-
-                <Clock3 size={14} />
-
-                {t.inProgress}
-                
-              </div>
+  <Clock3 size={14} />
+  {complaint?.status || "Pending"}
+</div>
 
             </div>
 
@@ -107,25 +156,25 @@ function Track() {
 
               <div className="tracking-detail">
                 <span>{t.category}</span>
-                <strong>{t.infrastructure}</strong>
+                <strong>{complaint?.category || "Not specified"}</strong>
               </div>
 
               <div className="tracking-detail">
                 <span>{t.issue}</span>
-                <strong>{t.streetLighting}</strong>
+                <strong>{complaint?.description || "Not specified"}</strong>
               </div>
 
               <div className="tracking-detail">
                 <span>{t.location}</span>
-                <strong>{t.sector4}</strong>
+                <strong>{complaint?.location || "Not specified"}</strong>
               </div>
 
               <div className="tracking-detail">
                 <span>{t.priority}</span>
 
                 <strong className="high-priority">
-                  {t.high}
-                </strong>
+  {complaint?.priority || "Not specified"}
+</strong>
 
               </div>
 
@@ -159,7 +208,13 @@ function Track() {
 
               {/* AI ANALYSIS */}
 
-              <div className="timeline-item completed">
+              <div
+  className={`timeline-item ${
+    complaint?.ai_summary || complaint?.ai_analysis
+      ? "completed"
+      : ""
+  }`}
+>
 
                 <div className="timeline-icon">
                   <Brain size={18} />
@@ -181,7 +236,15 @@ function Track() {
 
               {/* DEPARTMENT */}
 
-              <div className="timeline-item active">
+              <div
+  className={`timeline-item ${
+    complaint?.status === "Resolved" || complaint?.status === "Rejected"
+      ? "completed"
+      : complaint?.department_id
+      ? "active"
+      : ""
+  }`}
+>
 
                 <div className="timeline-icon">
                   <Building2 size={18} />
@@ -189,13 +252,13 @@ function Track() {
 
                 <div>
 
-                  <strong>
-                    {t.sentToDepartment}
-                  </strong>
+                <strong>
+  {t.sentToDepartment}
+</strong>
 
-                  <span>
-                    {t.departmentReview}
-                  </span>
+<span>
+  {department?.name || "Department not assigned yet"}
+</span>
 
                 </div>
 
@@ -203,7 +266,11 @@ function Track() {
 
               {/* RESOLUTION */}
 
-              <div className="timeline-item">
+              <div
+  className={`timeline-item ${
+    complaint?.status === "Resolved" ? "completed" : ""
+  }`}
+>
 
                 <div className="timeline-icon">
                   <Clock3 size={18} />
@@ -211,13 +278,17 @@ function Track() {
 
                 <div>
 
-                  <strong>
-                    {t.resolution}
-                  </strong>
+                <strong>
+  {t.resolution}
+</strong>
 
-                  <span>
-                    {t.awaitingAction}
-                  </span>
+<span>
+  {complaint?.status === "Resolved"
+    ? "Your grievance has been resolved."
+    : complaint?.status === "Rejected"
+    ? "Your grievance has been rejected."
+    : "Awaiting departmental action."}
+</span>
 
                 </div>
 
