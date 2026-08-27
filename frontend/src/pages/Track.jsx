@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   Search,
   CheckCircle2,
@@ -7,7 +8,11 @@ import {
   Clock3,
 } from "lucide-react";
 
+import { useSite } from "../context/SiteContext";
+
 function Track() {
+  const { t } = useSite();
+
   const [searched, setSearched] = useState(false);
 
   const handleSearch = (e) => {
@@ -19,34 +24,53 @@ function Track() {
     <section className="track-page">
       <div className="track-container">
 
+        {/* HEADER */}
+
         <div className="track-header">
+
           <span className="section-eyebrow">
-            CITIZEN SERVICES
+            {t.citizenServices}
           </span>
 
-          <h1>Track your grievance</h1>
+          <h1>
+            {t.trackPageTitle}
+          </h1>
 
           <p>
-            Enter your grievance ID to see where your issue
-            currently stands.
+            {t.trackPageDescription}
           </p>
+
         </div>
 
-        <form className="track-search" onSubmit={handleSearch}>
+        {/* SEARCH */}
+
+        <form
+          className="track-search"
+          onSubmit={handleSearch}
+        >
+
           <div className="track-input-wrapper">
+
             <Search size={19} />
 
             <input
               type="text"
-              placeholder="Example: NS-2026-001284"
+              placeholder={t.grievanceIdPlaceholder}
               required
             />
+
           </div>
 
-          <button type="submit" className="primary-button">
-            Track Grievance
+          <button
+            type="submit"
+            className="primary-button"
+          >
+            {t.trackGrievance}
           </button>
+
         </form>
+
+        {/* RESULT */}
 
         {searched && (
           <div className="tracking-result">
@@ -54,49 +78,64 @@ function Track() {
             <div className="tracking-summary">
 
               <div>
+
                 <span className="result-label">
-                  GRIEVANCE ID
+                  {t.grievanceId}
                 </span>
 
-                <strong>NS-2026-001284</strong>
+                <strong>
+                  NS-2026-001284
+                </strong>
+
               </div>
 
               <div className="status-badge">
+
                 <Clock3 size={14} />
-                IN PROGRESS
+
+                {t.inProgress}
+                
               </div>
 
             </div>
 
             <div className="tracking-divider"></div>
 
+            {/* DETAILS */}
+
             <div className="tracking-details">
 
               <div className="tracking-detail">
-                <span>Category</span>
-                <strong>Infrastructure</strong>
+                <span>{t.category}</span>
+                <strong>{t.infrastructure}</strong>
               </div>
 
               <div className="tracking-detail">
-                <span>Issue</span>
-                <strong>Street Lighting</strong>
+                <span>{t.issue}</span>
+                <strong>{t.streetLighting}</strong>
               </div>
 
               <div className="tracking-detail">
-                <span>Location</span>
-                <strong>Sector 4</strong>
+                <span>{t.location}</span>
+                <strong>{t.sector4}</strong>
               </div>
 
               <div className="tracking-detail">
-                <span>Priority</span>
+                <span>{t.priority}</span>
+
                 <strong className="high-priority">
-                  HIGH
+                  {t.high}
                 </strong>
+
               </div>
 
             </div>
 
+            {/* TIMELINE */}
+
             <div className="tracking-timeline">
+
+              {/* RECEIVED */}
 
               <div className="timeline-item completed">
 
@@ -105,13 +144,20 @@ function Track() {
                 </div>
 
                 <div>
-                  <strong>Grievance Received</strong>
+
+                  <strong>
+                    {t.grievanceReceivedTitle}
+                  </strong>
+
                   <span>
-                    Your grievance has been successfully registered.
+                    {t.grievanceReceivedStatus}
                   </span>
+
                 </div>
 
               </div>
+
+              {/* AI ANALYSIS */}
 
               <div className="timeline-item completed">
 
@@ -120,13 +166,20 @@ function Track() {
                 </div>
 
                 <div>
-                  <strong>AI Analysis Completed</strong>
+
+                  <strong>
+                    {t.aiAnalysisCompleted}
+                  </strong>
+
                   <span>
-                    The grievance has been classified and prioritized.
+                    {t.aiAnalysisDescription}
                   </span>
+
                 </div>
 
               </div>
+
+              {/* DEPARTMENT */}
 
               <div className="timeline-item active">
 
@@ -135,14 +188,20 @@ function Track() {
                 </div>
 
                 <div>
-                  <strong>Sent to Department</strong>
+
+                  <strong>
+                    {t.sentToDepartment}
+                  </strong>
+
                   <span>
-                    Municipal / Electricity Services is reviewing
-                    the grievance.
+                    {t.departmentReview}
                   </span>
+
                 </div>
 
               </div>
+
+              {/* RESOLUTION */}
 
               <div className="timeline-item">
 
@@ -151,10 +210,15 @@ function Track() {
                 </div>
 
                 <div>
-                  <strong>Resolution</strong>
+
+                  <strong>
+                    {t.resolution}
+                  </strong>
+
                   <span>
-                    Awaiting departmental action.
+                    {t.awaitingAction}
                   </span>
+
                 </div>
 
               </div>
@@ -168,4 +232,5 @@ function Track() {
     </section>
   );
 }
+
 export default Track;

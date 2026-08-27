@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   MapPin,
   Paperclip,
@@ -12,6 +13,13 @@ const [complaintText, setComplaintText] = useState("");
 const [analysis, setAnalysis] = useState(null);
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState("");
+
+const [citizenName, setCitizenName] = useState("");
+const [citizenMobile, setCitizenMobile] = useState("");
+const [location, setLocation] = useState("");
+const [grievanceId, setGrievanceId] = useState(null);
+
+  // handleSubmit comes here
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -20,29 +28,33 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/complaints/analyze",
+      "http://localhost:5000/api/complaints/submit",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          text: complaintText
+          citizen_name: citizenName,
+          citizen_mobile: citizenMobile,
+          description: complaintText,
+          location: location
         })
       }
     );
 
     if (!response.ok) {
-      throw new Error("AI analysis failed");
+      throw new Error("Complaint submission failed");
     }
 
     const result = await response.json();
 
     setAnalysis(result);
+    setGrievanceId(result.complaintId);
     setSubmitted(true);
   } catch (err) {
     console.error(err);
-    setError("Unable to analyze your grievance. Please try again.");
+    setError("Unable to submit your grievance. Please try again.");
   } finally {
     setLoading(false);
   }
@@ -126,6 +138,11 @@ if (submitted) {
             helps identify the right path.
           </p>
         </div>
+        {error && (
+  <p className="form-error">
+    {error}
+  </p>
+)}
 
         <form className="grievance-form" onSubmit={handleSubmit}>
 
@@ -140,10 +157,12 @@ if (submitted) {
               <div className="form-field">
                 <label>Full Name</label>
                 <input
-                  type="text"
-                  placeholder="Enter your full name"
-                  required
-                />
+  type="text"
+  placeholder="Enter city or district"
+  required
+  value={location}
+  onChange={(e) => setLocation(e.target.value)}
+/>
               </div>
 
               <div className="form-field">
@@ -152,6 +171,8 @@ if (submitted) {
                   type="tel"
                   placeholder="Enter mobile number"
                   required
+                  value={citizenMobile}
+                  onChange={(e) => setCitizenMobile(e.target.value)}
                 />
               </div>
 
