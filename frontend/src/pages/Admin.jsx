@@ -14,73 +14,59 @@ import {
     Search,
   } from "lucide-react";
   
-  import { useState } from "react";
+  import { useEffect, useState } from "react";
   
   function Admin() {
     const [selectedGrievance, setSelectedGrievance] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("ALL");
     const [statusFilter, setStatusFilter] = useState("ALL");
-  
-    const grievances = [
-      {
-        id: "NS-001284",
-        title: "Streetlight outage",
-        category: "Infrastructure",
-        priority: "HIGH",
-        department: "Municipal Services",
-        status: "In Progress",
-        location: "Sector 4",
-        date: "26 August 2026",
-        description:
-          "Streetlights in Sector 4 have not been functioning for the past three nights, creating visibility and safety concerns for residents.",
-        confidence: "94%",
-      },
-      {
-        id: "NS-001283",
-        title: "Water supply disruption",
-        category: "Water Services",
-        priority: "MEDIUM",
-        department: "Water Department",
-        status: "Assigned",
-        location: "Ward 12",
-        date: "26 August 2026",
-        description:
-          "Residents have reported an interruption in regular water supply in the area.",
-        confidence: "91%",
-      },
-      {
-        id: "NS-001282",
-        title: "Damaged road near market",
-        category: "Infrastructure",
-        priority: "HIGH",
-        department: "Public Works",
-        status: "In Progress",
-        location: "Central Market Road",
-        date: "25 August 2026",
-        description:
-          "A damaged section of road near the market is affecting vehicles and pedestrians.",
-        confidence: "96%",
-      },
-      {
-        id: "NS-001281",
-        title: "Garbage collection issue",
-        category: "Sanitation",
-        priority: "LOW",
-        department: "Sanitation",
-        status: "Resolved",
-        location: "Ward 8",
-        date: "24 August 2026",
-        description:
-          "Garbage collection was missed in the locality and residents reported accumulated waste.",
-        confidence: "89%",
-      },
-    ];
+    const [departments, setDepartments] = useState([]);
+    const [grievances, setGrievances] = useState([]);
+    useEffect(() => {
+      Promise.all([
+        fetch("http://localhost:5000/api/admin/complaints").then((res) =>
+          res.json()
+        ),
+        fetch("http://127.0.0.1:8004/api/departments").then((res) =>
+          res.json()
+        ),
+      ])
+      .then(([complaints, departments]) => {
+        setDepartments(departments);
+      
+        const formattedComplaints = complaints.map((complaint) => {
+            const department = departments.find(
+              (dept) => dept.id === complaint.department_id
+            );
+    
+            return {
+              ...complaint,
+              id: `NS-${String(complaint.id).padStart(6, "0")}`,
+              title: complaint.description?.split("\n")[0] || "Grievance",
+              department: department?.name || "Unassigned",
+              priority: String(complaint.priority || "LOW").toUpperCase(),
+              status:
+                String(complaint.status || "Pending")
+                  .charAt(0)
+                  .toUpperCase() +
+                String(complaint.status || "Pending").slice(1),
+              description: complaint.description || "",
+              category: complaint.category || "Uncategorized",
+            };
+          });
+    
+          setGrievances(formattedComplaints);
+        })
+        .catch((error) =>
+          console.error("Failed to fetch complaints:", error)
+        );
+    }, []);
+   
   
     const filteredGrievances = grievances.filter((grievance) => {
       const matchesSearch =
-        grievance.id
-          .toLowerCase()
+      String(grievance.id).toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         grievance.title
           .toLowerCase()
@@ -191,7 +177,7 @@ import {
   
                   <span>Total Grievances</span>
   
-                  <strong>1,284</strong>
+                  <strong>{grievances.length}</strong>
   
                   <small>
                     +12% this week
@@ -207,7 +193,9 @@ import {
   
                   <span>High Priority</span>
   
-                  <strong>147</strong>
+                  <strong>
+  {grievances.filter((g) => g.priority === "HIGH").length}
+</strong>
   
                   <small>
                     Requires attention
@@ -223,7 +211,9 @@ import {
   
                   <span>In Progress</span>
   
-                  <strong>392</strong>
+                  <strong>
+  {grievances.filter((g) => g.status === "In Progress").length}
+</strong>
   
                   <small>
                     Across departments
@@ -239,10 +229,18 @@ import {
   
                   <span>Resolved</span>
   
-                  <strong>745</strong>
+                  <strong>
+  {grievances.filter((g) => g.status === "Resolved").length}
+</strong>
   
                   <small>
-                    58% resolution rate
+                  {grievances.length > 0
+  ? `${Math.round(
+      (grievances.filter((g) => g.status === "Resolved").length /
+        grievances.length) *
+        100
+    )}% resolution rate`
+  : "0% resolution rate"}
                   </small>
   
                 </div>
@@ -494,19 +492,141 @@ import {
   
                   <span>AI CATEGORY</span>
   
-                  <strong>
-                    {selectedGrievance.category}
-                  </strong>
+                  <select
+  value={selectedGrievance.department}
+  onChange={async (e) => {
+    const newDepartment = e.target.value;
+
+    const selectedDept = departments.find(
+      (dept) => dept.name === newDepartment
+    );
+
+    const response = await fetch(
+      `http://localhost:5000/api/admin/complaints/${selectedGrievance.id.replace("NS-", "").replace(/^0+/, "")}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          department_id: selectedDept.id,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      setSelectedGrievance({
+        ...selectedGrievance,
+        department: newDepartment,
+      });
+
+      setGrievances((prev) =>
+        prev.map((g) =>
+          g.id === selectedGrievance.id
+            ? { ...g, department: newDepartment }
+            : g
+        )
+      );
+    }
+  }}
+>
+  {departments.map((dept) => (
+    <option key={dept.id} value={dept.name}>
+      {dept.name}
+    </option>
+  ))}
+</select>
   
                 </div>
+                <div className="admin-controls">
+  <label>
+    Status
+    <select
+  value={selectedGrievance.status}
+  onChange={async (e) => {
+    const newStatus = e.target.value;
+
+    const response = await fetch(
+      `http://localhost:5000/api/admin/complaints/${selectedGrievance.id.replace("NS-", "").replace(/^0+/, "")}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      setSelectedGrievance({
+        ...selectedGrievance,
+        status: newStatus,
+      });
+
+      setGrievances((prev) =>
+        prev.map((g) =>
+          g.id === selectedGrievance.id
+            ? { ...g, status: newStatus }
+            : g
+        )
+      );
+    }
+  }}
+>
+      <option>Pending</option>
+      <option>Assigned</option>
+      <option>In Progress</option>
+      <option>Resolved</option>
+    </select>
+  </label>
+</div>
   
                 <div className="detail-box">
   
                   <span>PRIORITY</span>
   
-                  <strong className="detail-priority">
-                    {selectedGrievance.priority}
-                  </strong>
+                  <select
+  className="detail-priority"
+  value={selectedGrievance.priority}
+  onChange={async (e) => {
+    const newPriority = e.target.value;
+
+    const response = await fetch(
+      `http://localhost:5000/api/admin/complaints/${selectedGrievance.id.replace("NS-", "").replace(/^0+/, "")}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          priority: newPriority,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      setSelectedGrievance({
+        ...selectedGrievance,
+        priority: newPriority,
+      });
+
+      setGrievances((prev) =>
+        prev.map((g) =>
+          g.id === selectedGrievance.id
+            ? { ...g, priority: newPriority }
+            : g
+        )
+      );
+    }
+  }}
+>
+  <option value="CRITICAL">Critical</option>
+  <option value="HIGH">High</option>
+  <option value="MEDIUM">Medium</option>
+  <option value="LOW">Low</option>
+</select>
   
                 </div>
   

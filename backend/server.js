@@ -166,7 +166,90 @@ app.post("/api/complaints/submit", async (req, res) => {
     });
   }
 });
+// ==================== ADMIN APIs ====================
 
+// Get all complaints for admin panel
+app.get("/api/admin/complaints", async (req, res) => {
+  try {
+    const response = await fetch(`${FASTAPI_BASE_URL}/api/complaints`);
+
+    if (!response.ok) {
+      const message = await readErrorMessage(
+        response,
+        "Could not fetch complaints"
+      );
+      return res.status(response.status).json({ error: message });
+    }
+
+    const complaints = await response.json();
+    res.json(complaints);
+  } catch (error) {
+    console.error("Admin complaints fetch error:", error);
+
+    res.status(500).json({
+      error: "Could not fetch complaints"
+    });
+  }
+});
+
+// Get one complaint for admin panel
+app.get("/api/admin/complaints/:id", async (req, res) => {
+  try {
+    const response = await fetch(
+      `${FASTAPI_BASE_URL}/api/complaints/${req.params.id}`
+    );
+
+    if (!response.ok) {
+      const message = await readErrorMessage(
+        response,
+        "Complaint not found"
+      );
+      return res.status(response.status).json({ error: message });
+    }
+
+    const complaint = await response.json();
+    res.json(complaint);
+  } catch (error) {
+    console.error("Admin complaint fetch error:", error);
+
+    res.status(500).json({
+      error: "Could not fetch complaint"
+    });
+  }
+});
+
+// Update complaint status/priority/details from admin panel
+app.patch("/api/admin/complaints/:id", async (req, res) => {
+  try {
+    const response = await fetch(
+      `${FASTAPI_BASE_URL}/api/complaints/${req.params.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(req.body)
+      }
+    );
+
+    if (!response.ok) {
+      const message = await readErrorMessage(
+        response,
+        "Could not update complaint"
+      );
+      return res.status(response.status).json({ error: message });
+    }
+
+    const updatedComplaint = await response.json();
+    res.json(updatedComplaint);
+  } catch (error) {
+    console.error("Admin complaint update error:", error);
+
+    res.status(500).json({
+      error: "Could not update complaint"
+    });
+  }
+});
 const PORT = 5000;
 
 app.listen(PORT, () => {
