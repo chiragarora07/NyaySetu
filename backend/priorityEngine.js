@@ -61,9 +61,19 @@ const PRIORITY_RULES = {
     return keywords.find((keyword) => text.includes(keyword));
   }
   
-  function calculatePriority(complaintText = "", affectedPeople = 0) {
+  function calculatePriority(
+    complaintText = "",
+    affectedPeople = 0,
+    aiSeverity = ""
+  ) {
     const text = complaintText.toLowerCase();
     const people = Number(affectedPeople || 0);
+  
+    let ruleResult = {
+      priority: "Low",
+      score: PRIORITY_RULES.Low.score,
+      reason: "No high-severity indicators detected",
+    };
   
     const criticalKeyword = findKeyword(
       text,
@@ -71,48 +81,57 @@ const PRIORITY_RULES = {
     );
   
     if (criticalKeyword) {
-      return {
+      ruleResult = {
         priority: "Critical",
         score: PRIORITY_RULES.Critical.score,
         reason: `Critical issue detected: "${criticalKeyword}"`,
       };
+    } else {
+      const highKeyword = findKeyword(
+        text,
+        KEYWORD_GROUPS.High
+      );
+  
+      if (highKeyword || people >= 20) {
+        ruleResult = {
+          priority: "High",
+          score: PRIORITY_RULES.High.score,
+          reason: highKeyword
+            ? `High-priority issue detected: "${highKeyword}"`
+            : "Large number of affected citizens",
+        };
+      } else {
+        const mediumKeyword = findKeyword(
+          text,
+          KEYWORD_GROUPS.Medium
+        );
+  
+        if (mediumKeyword || people >= 5) {
+          ruleResult = {
+            priority: "Medium",
+            score: PRIORITY_RULES.Medium.score,
+            reason: mediumKeyword
+              ? `Medium-priority civic issue detected: "${mediumKeyword}"`
+              : "Multiple citizens affected",
+          };
+        }
+      }
     }
   
-    const highKeyword = findKeyword(
-      text,
-      KEYWORD_GROUPS.High
-    );
+    const aiPriority = String(aiSeverity || "").trim();
   
-    if (highKeyword || people >= 20) {
+    const aiScore =
+      PRIORITY_RULES[aiPriority]?.score || 0;
+  
+    if (aiScore > ruleResult.score) {
       return {
-        priority: "High",
-        score: PRIORITY_RULES.High.score,
-        reason: highKeyword
-          ? `High-priority issue detected: "${highKeyword}"`
-          : "Large number of affected citizens",
+        priority: aiPriority,
+        score: aiScore,
+        reason: `Priority raised to ${aiPriority} based on AI severity`,
       };
     }
   
-    const mediumKeyword = findKeyword(
-      text,
-      KEYWORD_GROUPS.Medium
-    );
-  
-    if (mediumKeyword || people >= 5) {
-      return {
-        priority: "Medium",
-        score: PRIORITY_RULES.Medium.score,
-        reason: mediumKeyword
-          ? `Medium-priority civic issue detected: "${mediumKeyword}"`
-          : "Multiple citizens affected",
-      };
-    }
-  
-    return {
-      priority: "Low",
-      score: PRIORITY_RULES.Low.score,
-      reason: "No high-severity indicators detected",
-    };
+    return ruleResult;
   }
   
   module.exports = {

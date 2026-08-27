@@ -76,7 +76,8 @@ Return ONLY valid JSON:
 
       const priorityResult = calculatePriority(
         complaint,
-        0
+        0,
+        analysis.severity
       );
       
       return {
