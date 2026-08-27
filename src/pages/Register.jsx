@@ -103,11 +103,13 @@ if (submitted) {
 
             <div>
               <span>Reason</span>
-              <strong>{analysis.priorityReason || analysis.reason}</strong>
+              <strong>
+                {analysis.priorityReason || analysis.reason}
+              </strong>
             </div>
 
             <div>
-              <span>ANALYSIS STATUS</span>
+              <span>Analysis Status</span>
               <strong>Analyzed Successfully</strong>
             </div>
           </div>
