@@ -6,26 +6,26 @@ function retrieveRelevantKnowledge(complaint) {
   const results = departments.map((department) => {
     let score = 0;
 
-    // Exact department match gets highest weight
+    // Exact department match
     if (text.includes(department.department.toLowerCase())) {
       score += 10;
     }
 
-    // Category matches are highly relevant
+    // Category matches
     department.categories.forEach((category) => {
       if (text.includes(category.toLowerCase())) {
         score += 6;
       }
     });
 
-    // Specific keywords
+    // Keyword matches
     department.keywords.forEach((keyword) => {
       if (text.includes(keyword.toLowerCase())) {
         score += 3;
       }
     });
 
-    // Responsibility matches get lower weight
+    // Responsibility matches
     department.responsibilities.forEach((responsibility) => {
       const words = responsibility
         .toLowerCase()
@@ -40,15 +40,21 @@ function retrieveRelevantKnowledge(complaint) {
     });
 
     return {
-      ...department,
+      department,
       relevanceScore: score
     };
   });
 
-  return results
-    .filter((department) => department.relevanceScore > 0)
+  const best = results
+    .filter((item) => item.relevanceScore > 0)
     .sort((a, b) => b.relevanceScore - a.relevanceScore)
     .slice(0, 1);
+
+  return best.map((item) => ({
+    department: item.department.department,
+    categories: item.department.categories,
+    responsibilities: item.department.responsibilities
+  }));
 }
 
 module.exports = {

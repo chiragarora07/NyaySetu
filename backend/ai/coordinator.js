@@ -19,6 +19,10 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
   model: "gemini-3.6-flash",
+  generationConfig: {
+    temperature: 0,
+    responseMimeType: "application/json",
+  },
 });
 
 function extractJson(responseText) {
@@ -81,53 +85,40 @@ async function analyzeWithAI(complaint) {
       ? JSON.stringify(knowledge, null, 2)
       : "No directly relevant department knowledge was retrieved.";
 
-    const prompt = `
-You are the NyaySetu Agentic AI Coordinator.
-
-Analyze this citizen complaint.
-
-Your workflow:
-
-1. Understand the complaint.
-2. Use the retrieved knowledge when available.
-3. Identify the responsible department.
-4. Assess the severity and potential impact of the complaint.
-5. Generate a concise summary.
-6. Explain the decision.
-
-Citizen complaint:
-
-${complaint}
-
-Retrieved knowledge:
-
-${context}
-
-Important rules:
-
-- If relevant knowledge was retrieved, use it as the primary reference.
-- If no relevant knowledge was retrieved, use your general understanding,
-  but clearly reason about the most appropriate department.
-- Prefer an official department name from the retrieved knowledge when available.
-- Do not invent specific government rules.
-- Priority must be exactly one of:
-  Critical, High, Medium, Low.
-
-Return ONLY valid JSON:
-
-{
-  "category": "string",
-  "department": "string",
-  "priority": "Critical | High | Medium | Low",
-  "summary": "string",
-  "reason": "string",
-  "status": "Pending"
-}
-`;
+      const prompt = `
+      You are NyaySetu, an AI coordinator for citizen grievances.
+      
+      Analyze the complaint and return the required structured information.
+      
+      Complaint:
+      ${complaint}
+      
+      Relevant departmental knowledge:
+      ${context || "No relevant knowledge retrieved."}
+      
+      Rules:
+      - Use the retrieved knowledge as the primary reference when available.
+      - Select the most appropriate responsible department.
+      - Assess severity based on safety, urgency, and citizen impact.
+      - Do not invent government rules.
+      - Priority must be exactly: Critical, High, Medium, or Low.
+      - Keep summary and reason concise.
+      - Return ONLY valid JSON.
+      
+      Required JSON:
+      {
+        "category": "string",
+        "department": "string",
+        "priority": "Critical | High | Medium | Low",
+        "summary": "string",
+        "reason": "string",
+        "status": "Pending"
+      }
+      `;
 
     let result;
 
-    for (let attempt = 1; attempt <= 3; attempt++) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
       try {
         console.log(`Calling Gemini... attempt ${attempt}/3`);
 
@@ -152,7 +143,7 @@ Return ONLY valid JSON:
           );
 
           await new Promise((resolve) =>
-            setTimeout(resolve, attempt * 2000)
+            setTimeout(resolve, 1000)
           );
         } else {
           throw error;
