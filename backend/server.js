@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const { analyzeWithAI } = require("./ai/coordinator");
+const { detectDuplicate } = require("./duplicateDetector");
 
 const {
   translateToEnglish,
@@ -254,6 +255,42 @@ app.post(
         await analyzeWithAI(
           englishDescription
         );
+        // Check for duplicate complaints
+const complaintsResponse = await fetch(
+  `${FASTAPI_BASE_URL}/api/complaints`
+);
+
+if (!complaintsResponse.ok) {
+  throw new Error("Could not fetch existing complaints");
+}
+
+const existingComplaints =
+  await complaintsResponse.json();
+
+  const duplicateResults = await detectDuplicate(
+    englishDescription,
+    location,
+    existingComplaints.map((complaint) => ({
+      id: complaint.id,
+      text: complaint.description,
+      location: complaint.location,
+    }))
+  );
+
+const duplicateComplaint =
+  duplicateResults.find(
+    (result) => result.isDuplicate
+  );
+  if (duplicateComplaint) {
+    return res.json({
+      isDuplicate: true,
+      duplicateComplaintId: duplicateComplaint.id,
+      message: `A similar complaint already exists with ID ${duplicateComplaint.id}.`,
+      similarity: duplicateComplaint.similarity,
+    });
+  }
+  console.log("Duplicate check results:", duplicateResults);
+console.log("Detected duplicate:", duplicateComplaint);
 
       /*
        * Fetch departments from FastAPI.
@@ -392,17 +429,27 @@ app.post(
             )
           : analysis;
 
-      res.json({
-        complaintId:
-          savedComplaint.id,
-
-        ...citizenAnalysis,
-
-        departmentId:
-          department
-            ? department.id
-            : null,
-      });
+          res.json({
+            complaintId:
+              savedComplaint.id,
+          
+            ...citizenAnalysis,
+          
+            departmentId:
+              department
+                ? department.id
+                : null,
+          
+            duplicateDetected: !!duplicateComplaint,
+          
+            duplicateComplaint: duplicateComplaint
+              ? {
+                  id: duplicateComplaint.id,
+                  similarity: duplicateComplaint.similarity,
+                  text: duplicateComplaint.text,
+                }
+              : null,
+          });
     } catch (error) {
       console.error(
         "Complaint submission error:",

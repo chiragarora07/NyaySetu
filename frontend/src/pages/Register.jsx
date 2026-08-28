@@ -108,6 +108,13 @@ function Register() {
         throw new Error(result.error || t.submitError);
       }
 
+      if (result.isDuplicate) {
+        setError(
+          `A similar complaint already exists with ID ${result.duplicateComplaintId}.`
+        );
+        return;
+      }
+      
       setAnalysis(result);
       setGrievanceId(result.complaintId);
       setSubmitted(true);

@@ -26,9 +26,9 @@ async function main() {
 
   const results = await detectDuplicate(
     newComplaint,
+    "Korba",
     existingComplaints
   );
-
   results.forEach((result, index) => {
     console.log(
       `${index + 1}. ID: ${result.id} | ` +

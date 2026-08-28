@@ -3,12 +3,26 @@ const {
     cosineSimilarity,
   } = require("./similarity");
   
-  async function detectDuplicate(newComplaint, existingComplaints, threshold = 0.7) {
+  async function detectDuplicate(
+    newComplaint,
+    newLocation,
+    existingComplaints,
+    threshold = 0.7
+  ) {
     const newEmbedding = await createEmbedding(newComplaint);
   
     const results = [];
   
     for (const complaint of existingComplaints) {
+      const sameLocation =
+  newLocation &&
+  complaint.location &&
+  newLocation.trim().toLowerCase() ===
+    complaint.location.trim().toLowerCase();
+
+if (!sameLocation) {
+  continue;
+}
       const existingEmbedding = await createEmbedding(complaint.text);
   
       const score = cosineSimilarity(
