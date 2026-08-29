@@ -11,7 +11,8 @@ const {
 
 const app = express();
 
-const FASTAPI_BASE_URL = "http://127.0.0.1:8004";
+const FASTAPI_BASE_URL =
+  process.env.FASTAPI_BASE_URL || "http://127.0.0.1:8004";
 
 app.use(cors());
 app.use(express.json());
@@ -622,7 +623,7 @@ START SERVER
 ==========================================================
 */
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(
